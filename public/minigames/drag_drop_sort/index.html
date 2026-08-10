@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clasificación Drag & Drop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    <header>
+      <h1>Clasificador de Conceptos</h1>
+      <p>Arrastra cada elemento a la categoría correcta.</p>
+    </header>
+
+    <div class="items-pool" id="itemsPool">
+      <!-- Los items se inyectarán con JS -->
+    </div>
+
+    <div class="drop-zones">
+      <div class="drop-zone" id="zoneA" data-category="organico">
+        <h2>Orgánico</h2>
+        <div class="items-container"></div>
+      </div>
+      <div class="drop-zone" id="zoneB" data-category="inorganico">
+        <h2>Inorgánico</h2>
+        <div class="items-container"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="verifyBtn" disabled>Verificar Clasificación</button>
+    </div>
+  </div>
+
+  <script src="../../minigames_sdk/bridge.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

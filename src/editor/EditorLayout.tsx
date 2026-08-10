@@ -18,12 +18,14 @@ import { EnginePlayer } from '../engine/EnginePlayer';
 import { useAssetStore } from './assetStore';
 import { 
   Undo, Redo, Play, Code, Box, 
-  MessageSquare, Settings, Save, Map, Package, Gamepad2, GraduationCap, Image as ImageIcon, Users, Trash2, Upload
+  MessageSquare, Settings, Save, Map, Package, Gamepad2, GraduationCap, Image as ImageIcon, Users, Trash2, Upload,
+  FastForward, UserCircle, Music, GitBranch
 } from 'lucide-react';
 
 export const EditorLayout: React.FC = () => {
   const { viewMode, setViewMode } = useEditorStore();
   const { code, handleCodeChange, syntaxError } = useSyncEngine();
+  const [showTemplateSelector, setShowTemplateSelector] = useState(true);
   const [activeTab, setActiveTab] = useState<'nodes' | 'sprites' | 'backgrounds'>('nodes');
   const [showInventory, setShowInventory] = useState(false);
   const [activeMinigame, setActiveMinigame] = useState<string | null>(null);
@@ -100,8 +102,12 @@ export const EditorLayout: React.FC = () => {
     return () => clearInterval(saveInterval);
   }, []);
 
-  const handleDragStart = (event: React.DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+  const handleDragStart = (event: React.DragEvent, nodeType: string, initialData?: any) => {
+    if (initialData) {
+       event.dataTransfer.setData('application/reactflow', JSON.stringify({ type: nodeType, data: initialData }));
+    } else {
+       event.dataTransfer.setData('application/reactflow', nodeType);
+    }
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -125,13 +131,17 @@ export const EditorLayout: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-900 text-slate-100 overflow-hidden font-sans">
-      <TemplateSelector onSelect={() => console.log('Template loaded')} />
+      {showTemplateSelector && <TemplateSelector onSelect={() => setShowTemplateSelector(false)} />}
       {/* HEADER BAR */}
       <div className="h-14 border-b border-slate-700/50 glass flex items-center justify-between px-4 z-20">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            NovelCraft Studio
-          </h1>
+          <button 
+            onClick={() => setShowTemplateSelector(true)} 
+            className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+            title="Volver al Menú Principal"
+          >
+            TuVisualNovel
+          </button>
           <OfflineBadge />
           <div className="h-6 w-px bg-slate-700 mx-2"></div>
           <button className="p-1.5 hover:bg-slate-700 rounded transition-colors text-slate-400 hover:text-white" title="Undo">
@@ -193,78 +203,92 @@ export const EditorLayout: React.FC = () => {
         <DebuggerPanel />
         
         {/* LEFT SIDEBAR - TOOL PALETTE */}
-        <div className="w-64 border-r border-slate-700/50 glass z-10 flex flex-col">
-          <div className="flex border-b border-slate-700/50 flex-col">
-             <div className="flex w-full">
+        <div className="w-64 border-r border-slate-700/50 glass z-10 flex flex-col shadow-xl">
+          <div className="flex flex-col p-3 gap-2 bg-slate-900/80 border-b border-slate-700/50 shadow-md">
+             <div className="flex w-full gap-2">
                 <button 
                   onClick={() => setActiveTab('nodes')}
-                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${activeTab === 'nodes' ? 'border-blue-500 text-blue-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+                  className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg border transition-all flex flex-col items-center justify-center gap-1 shadow-sm ${activeTab === 'nodes' ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-105' : 'border-slate-700 bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200 hover:border-slate-500'}`}
                 >
-                  Nodos
+                  <Box size={16} /> Nodos
                 </button>
                 <button 
                   onClick={() => setActiveTab('sprites')}
-                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${activeTab === 'sprites' ? 'border-purple-500 text-purple-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+                  className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg border transition-all flex flex-col items-center justify-center gap-1 shadow-sm ${activeTab === 'sprites' ? 'bg-purple-600/20 border-purple-500 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.3)] scale-105' : 'border-slate-700 bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200 hover:border-slate-500'}`}
                 >
-                  Personajes
+                  <Users size={16} /> Personajes
                 </button>
              </div>
              <button 
                onClick={() => setActiveTab('backgrounds')}
-               className={`w-full py-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${activeTab === 'backgrounds' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-slate-400 hover:text-slate-200'}`}
+               className={`w-full py-2 mt-1 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition-all flex items-center justify-center gap-2 shadow-sm ${activeTab === 'backgrounds' ? 'bg-emerald-600/20 border-emerald-500 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02]' : 'border-slate-700 bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200 hover:border-slate-500'}`}
              >
-               Fondos de escena
+               <ImageIcon size={16} /> Fondos de escena
              </button>
           </div>
           
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 custom-scrollbar">
             {activeTab === 'nodes' && (
-              <>
-                <div 
-                  className="p-3 bg-blue-900/40 border border-blue-500/50 rounded-lg cursor-grab hover:bg-blue-800/50 flex items-center gap-3 transition-colors"
-                  onDragStart={(event) => handleDragStart(event, 'dialogue')}
-                  draggable
-                >
-                  <MessageSquare size={18} className="text-blue-400" />
-                  <span className="text-sm font-medium">Dialogue</span>
-                </div>
-                
-                <div 
-                  className="p-3 bg-emerald-900/40 border border-emerald-500/50 rounded-lg cursor-grab hover:bg-emerald-800/50 flex items-center gap-3 transition-colors"
-                  onDragStart={(event) => handleDragStart(event, 'decision')}
-                  draggable
-                >
-                  <Map size={18} className="text-emerald-400" />
-                  <span className="text-sm font-medium">Decision</span>
+              <div className="flex flex-col gap-4">
+                {/* 1. NARRATIVA */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">📖 Narrativa</h3>
+                  <div className="p-2 bg-blue-900/40 border border-blue-500/50 rounded-lg cursor-grab hover:bg-blue-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'dialogue')} draggable>
+                    <MessageSquare size={16} className="text-blue-400" /> <span className="text-xs font-medium">Diálogo</span>
+                  </div>
+                  <div className="p-2 bg-blue-900/40 border border-blue-500/50 rounded-lg cursor-grab hover:bg-blue-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'decision')} draggable>
+                    <Map size={16} className="text-blue-400" /> <span className="text-xs font-medium">Decisión</span>
+                  </div>
+                  <div className="p-2 bg-blue-900/40 border border-blue-500/50 rounded-lg cursor-grab hover:bg-blue-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'jump')} draggable>
+                    <FastForward size={16} className="text-blue-400" /> <span className="text-xs font-medium">Etiqueta / Salto</span>
+                  </div>
                 </div>
 
-                <div 
-                  className="p-3 bg-purple-900/40 border border-purple-500/50 rounded-lg cursor-grab hover:bg-purple-800/50 flex items-center gap-3 transition-colors"
-                  onDragStart={(event) => handleDragStart(event, 'variable')}
-                  draggable
-                >
-                  <Settings size={18} className="text-purple-400" />
-                  <span className="text-sm font-medium">Variable / Score</span>
+                {/* 2. MULTIMEDIA */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider mb-1">🎨 Multimedia & Escena</h3>
+                  <div className="p-2 bg-cyan-900/40 border border-cyan-500/50 rounded-lg cursor-grab hover:bg-cyan-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'scene')} draggable>
+                    <ImageIcon size={16} className="text-cyan-400" /> <span className="text-xs font-medium">Escenario</span>
+                  </div>
+                  <div className="p-2 bg-pink-900/40 border border-pink-500/50 rounded-lg cursor-grab hover:bg-pink-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'sprite')} draggable>
+                    <UserCircle size={16} className="text-pink-400" /> <span className="text-xs font-medium">Sprite</span>
+                  </div>
+                  <div className="p-2 bg-cyan-900/40 border border-cyan-500/50 rounded-lg cursor-grab hover:bg-cyan-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'audio')} draggable>
+                    <Music size={16} className="text-cyan-400" /> <span className="text-xs font-medium">Audio</span>
+                  </div>
                 </div>
 
-                <div 
-                  className="p-3 bg-orange-900/40 border border-orange-500/50 rounded-lg cursor-grab hover:bg-orange-800/50 flex items-center gap-3 transition-colors"
-                  onDragStart={(event) => handleDragStart(event, 'inventory')}
-                  draggable
-                >
-                  <Package size={18} className="text-orange-400" />
-                  <span className="text-sm font-medium">Inventory</span>
+                {/* 3. LÓGICA Y ESTADO */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[10px] font-bold text-purple-400 uppercase tracking-wider mb-1">🧠 Lógica y Estado</h3>
+                  <div className="p-2 bg-purple-900/40 border border-purple-500/50 rounded-lg cursor-grab hover:bg-purple-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'score')} draggable>
+                    <Settings size={16} className="text-purple-400" /> <span className="text-xs font-medium">Variable / Puntos</span>
+                  </div>
+                  <div className="p-2 bg-orange-900/40 border border-orange-500/50 rounded-lg cursor-grab hover:bg-orange-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'inventory')} draggable>
+                    <Package size={16} className="text-orange-400" /> <span className="text-xs font-medium">Inventario</span>
+                  </div>
+                  <div className="p-2 bg-purple-900/40 border border-purple-500/50 rounded-lg cursor-grab hover:bg-purple-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'condition')} draggable>
+                    <GitBranch size={16} className="text-purple-400" /> <span className="text-xs font-medium">Condición</span>
+                  </div>
                 </div>
 
-                <div 
-                  className="p-3 bg-yellow-900/40 border border-yellow-500/50 rounded-lg cursor-grab hover:bg-yellow-800/50 flex items-center gap-3 transition-colors"
-                  onDragStart={(event) => handleDragStart(event, 'minigame')}
-                  draggable
-                >
-                  <Gamepad2 size={18} className="text-yellow-400" />
-                  <span className="text-sm font-medium">Minigame</span>
+                {/* 4. MINIJUEGOS */}
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-1">🎮 Minijuegos</h3>
+                  <div className="p-2 bg-amber-900/40 border border-amber-500/50 rounded-lg cursor-grab hover:bg-amber-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'minigame')} draggable>
+                    <Gamepad2 size={16} className="text-amber-400" /> <span className="text-xs font-medium">Minijuego Genérico</span>
+                  </div>
+                  <div className="p-2 bg-amber-900/40 border border-amber-500/50 rounded-lg cursor-grab hover:bg-amber-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'minigame', { minigameId: 'terminal_hack' })} draggable>
+                    <Code size={16} className="text-amber-400" /> <span className="text-xs font-medium">Terminal Hack</span>
+                  </div>
+                  <div className="p-2 bg-amber-900/40 border border-amber-500/50 rounded-lg cursor-grab hover:bg-amber-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'minigame', { minigameId: 'drag_drop_sort' })} draggable>
+                    <Package size={16} className="text-amber-400" /> <span className="text-xs font-medium">Clasificación D&D</span>
+                  </div>
+                  <div className="p-2 bg-amber-900/40 border border-amber-500/50 rounded-lg cursor-grab hover:bg-amber-800/50 flex items-center gap-3 transition-colors" onDragStart={(e) => handleDragStart(e, 'minigame', { minigameId: 'quiz_challenge' })} draggable>
+                    <GraduationCap size={16} className="text-amber-400" /> <span className="text-xs font-medium">Trivia a Contrarreloj</span>
+                  </div>
                 </div>
-              </>
+              </div>
             )}
             
             {activeTab === 'sprites' && (

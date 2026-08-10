@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Hack</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="terminal">
+    <div id="output">
+      <p>Iniciando secuencia de hackeo...</p>
+      <p>Objetivo: Descifrar el código numérico de 4 dígitos (0-9 sin repetir).</p>
+      <p>Tienes <span id="attemptsLeft">8</span> intentos restantes.</p>
+    </div>
+    
+    <div class="input-line">
+      <span class="prompt">root@system:~# </span>
+      <input type="text" id="commandInput" maxlength="4" autocomplete="off" autofocus placeholder="Ingresa 4 dígitos">
+      <button id="submitBtn">ENTER</button>
+    </div>
+  </div>
+
+  <!-- Importamos el SDK -->
+  <script src="../../minigames_sdk/bridge.js"></script>
+  <!-- Lógica específica del juego -->
+  <script src="game.js"></script>
+</body>
+</html>

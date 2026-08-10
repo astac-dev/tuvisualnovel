@@ -19,7 +19,8 @@ export const EnginePlayer: React.FC<EnginePlayerProps> = ({ onClose }) => {
   const [currentNodeId, setCurrentNodeId] = useState<string | null>(null);
   const [showInventory, setShowInventory] = useState(false);
   const [currentBg, setCurrentBg] = useState<string>("/assets/bg_laboratorio.jpg");
-  const [currentSprite, setCurrentSprite] = useState<string | null>(null);
+  const [activeSprites, setActiveSprites] = useState<any[]>([]);
+  const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
 
   // Initialize Game
   useEffect(() => {
@@ -63,8 +64,36 @@ export const EnginePlayer: React.FC<EnginePlayerProps> = ({ onClose }) => {
     if (!currentNode) return;
 
     // Actualizar entorno visual si el nodo define nuevos assets
-    if (currentNode.data.background) setCurrentBg(String(currentNode.data.background));
-    if (currentNode.data.sprite !== undefined) setCurrentSprite(currentNode.data.sprite ? String(currentNode.data.sprite) : null);
+    if (currentNode.type === 'scene' && currentNode.data.backgroundUrl) {
+      setCurrentBg(String(currentNode.data.backgroundUrl));
+      setTimeout(() => advanceToNext(), 1000); // Wait for transition
+    } else if (currentNode.data.background) {
+      setCurrentBg(String(currentNode.data.background));
+    }
+
+    if (currentNode.type === 'sprite') {
+      const charId = String(currentNode.data.characterId);
+      if (currentNode.data.action === 'show') {
+         setActiveSprites(prev => {
+            const exists = prev.find(s => s.id === charId);
+            // Defaulting sprite URL generation for demo purposes
+            const url = `/assets/${charId}.png`; 
+            if (exists) {
+               return prev.map(s => s.id === charId ? { ...s, url, position: currentNode.data.position || 'center' } : s);
+            }
+            return [...prev, { id: charId, url, position: currentNode.data.position || 'center', scale: 1 }];
+         });
+      } else if (currentNode.data.action === 'hide') {
+         setActiveSprites(prev => prev.filter(s => s.id !== charId));
+      }
+      setTimeout(() => advanceToNext(), 100);
+    } else if (currentNode.data.sprite) {
+       setActiveSprites([{ id: 'legacy_char', url: String(currentNode.data.sprite), position: 'center', scale: 1 }]);
+    }
+
+    if (currentNode.type === 'dialogue') {
+       setActiveSpeaker(String(currentNode.data.speaker || 'Narrador'));
+    }
 
     // Ejecutar lógica inmediata (sin esperar interacciones)
     if (currentNode.type === 'variable') {
@@ -117,7 +146,8 @@ export const EnginePlayer: React.FC<EnginePlayerProps> = ({ onClose }) => {
       <div className="flex-1 relative bg-black">
         <StageRenderer 
           backgroundUrl={currentBg} 
-          sprites={currentSprite ? [{ id: 'char1', url: currentSprite, position: 'center', scale: 1 }] : []}
+          sprites={activeSprites}
+          activeSpeaker={activeSpeaker}
         />
 
         {showInventory && <InventoryOverlay onClose={() => setShowInventory(false)} />}

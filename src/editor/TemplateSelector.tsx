@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useEditorStore } from './editorStore';
-import { misterioLaboratorioAST } from '../templates/demoProject';
+import { misterioLaboratorioAST, dilemaHistoricoAST } from '../templates/demoProject';
 import { storageManager, AutoSaveData } from '../utils/storage';
 import { Beaker, BookOpen, FilePlus, DatabaseBackup } from 'lucide-react';
 
@@ -10,7 +10,6 @@ interface TemplateSelectorProps {
 
 export const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelect }) => {
   const { setNodes, setEdges } = useEditorStore();
-  const [isVisible, setIsVisible] = useState(true);
   const [savedProject, setSavedProject] = useState<AutoSaveData | null>(null);
 
   React.useEffect(() => {
@@ -29,25 +28,22 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelect }) 
       setNodes(misterioLaboratorioAST.nodes);
       setEdges(misterioLaboratorioAST.edges);
     } else if (type === 'ethics') {
-      setNodes([misterioLaboratorioAST.nodes[0]]);
-      setEdges([]);
+      setNodes(dilemaHistoricoAST.nodes);
+      setEdges(dilemaHistoricoAST.edges);
     } else if (type === 'recover' && savedProject) {
       setNodes(savedProject.nodes);
       setEdges(savedProject.edges);
     }
     
-    setIsVisible(false);
     onSelect();
   };
-
-  if (!isVisible) return null;
 
   return (
     <div className="absolute inset-0 z-[100] bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-8">
       <div className="max-w-4xl w-full">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent mb-4">
-            Bienvenido a NovelCraft Studio
+            Bienvenido a TuVisualNovel
           </h1>
           <p className="text-slate-400 text-lg">Selecciona un punto de partida para tu proyecto educativo.</p>
         </div>

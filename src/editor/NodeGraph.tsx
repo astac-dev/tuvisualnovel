@@ -20,6 +20,11 @@ import { DecisionNode } from './nodes/DecisionNode';
 import { VariableNode } from './nodes/VariableNode';
 import { InventoryNode } from './nodes/InventoryNode';
 import { MinigameNode } from './nodes/MinigameNode';
+import { JumpNode } from './nodes/JumpNode';
+import { SceneNode } from './nodes/SceneNode';
+import { SpriteNode } from './nodes/SpriteNode';
+import { AudioNode } from './nodes/AudioNode';
+import { ConditionNode } from './nodes/ConditionNode';
 
 const nodeTypes = {
   dialogue: DialogueNode,
@@ -27,6 +32,11 @@ const nodeTypes = {
   variable: VariableNode,
   inventory: InventoryNode,
   minigame: MinigameNode,
+  jump: JumpNode,
+  scene: SceneNode,
+  sprite: SpriteNode,
+  audio: AudioNode,
+  condition: ConditionNode,
 };
 
 let idCounter = 0;
@@ -61,9 +71,22 @@ const GraphRenderer = () => {
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      const type = event.dataTransfer.getData('application/reactflow');
-      if (typeof type === 'undefined' || !type) {
+      let typeStr = event.dataTransfer.getData('application/reactflow');
+      if (!typeStr) {
         return;
+      }
+
+      let type = typeStr;
+      let initialData = {};
+
+      if (typeStr.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(typeStr);
+          type = parsed.type;
+          initialData = parsed.data || {};
+        } catch (e) {
+          console.error("Error parsing node drop data", e);
+        }
       }
 
       const position = screenToFlowPosition({
@@ -75,7 +98,7 @@ const GraphRenderer = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: { ...initialData },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -91,6 +114,11 @@ const GraphRenderer = () => {
     }
   }, [setSelectedNodeId]);
 
+  const onEdgeContextMenu = useCallback((event: React.MouseEvent, edge: any) => {
+    event.preventDefault();
+    setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+  }, [setEdges]);
+
   return (
     <div className="w-full h-full" ref={reactFlowWrapper}>
       <ReactFlow
@@ -102,6 +130,7 @@ const GraphRenderer = () => {
         onDrop={onDrop}
         onDragOver={onDragOver}
         onSelectionChange={onSelectionChange}
+        onEdgeContextMenu={onEdgeContextMenu}
         nodeTypes={nodeTypes}
         fitView
       >

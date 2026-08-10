@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia a Contrarreloj</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="header">
+      <div class="progress-text">Pregunta <span id="currentQ">1</span>/<span id="totalQ">3</span></div>
+      <div class="timer-bar">
+        <div class="timer-fill" id="timerFill"></div>
+      </div>
+    </div>
+
+    <div class="question-box">
+      <h2 id="questionText">¿Cargando pregunta...?</h2>
+    </div>
+
+    <div class="options-grid" id="optionsGrid">
+      <!-- Los botones de opciones se generan aquí con JS -->
+    </div>
+
+    <div id="resultScreen" class="hidden">
+      <h2 id="finalTitle">¡Tiempo Agotado!</h2>
+      <p id="finalStats">Respuestas correctas: 0</p>
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <script src="../../minigames_sdk/bridge.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

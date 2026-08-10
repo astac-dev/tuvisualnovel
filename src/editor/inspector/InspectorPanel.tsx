@@ -120,7 +120,147 @@ export const InspectorPanel: React.FC = () => {
           </div>
         );
 
-      // We can add forms for 'decision', 'inventory', 'minigame' similarly
+      case 'jump':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Acción</label>
+              <select value={String(selectedNode.data.action || 'goto')} onChange={e => handleChange('action', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-blue-500">
+                <option value="goto">Ir a Etiqueta (GOTO)</option>
+                <option value="label">Definir Etiqueta (LABEL)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Nombre de Etiqueta</label>
+              <input type="text" value={String(selectedNode.data.target || '')} onChange={e => handleChange('target', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-blue-500" placeholder="ej: capitulo_2" />
+            </div>
+          </div>
+        );
+      case 'scene':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">URL Fondo</label>
+              <input type="text" value={String(selectedNode.data.backgroundUrl || '')} onChange={e => handleChange('backgroundUrl', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-cyan-500" placeholder="/assets/bg.jpg" />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Transición</label>
+              <select value={String(selectedNode.data.transition || 'instant')} onChange={e => handleChange('transition', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-cyan-500">
+                <option value="instant">Instantánea</option>
+                <option value="dissolve">Disolver</option>
+                <option value="fade">Fade in/out</option>
+              </select>
+            </div>
+          </div>
+        );
+      case 'sprite':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Acción</label>
+              <select value={String(selectedNode.data.action || 'show')} onChange={e => handleChange('action', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-pink-500">
+                <option value="show">Mostrar</option>
+                <option value="hide">Ocultar</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">ID Personaje</label>
+              <input type="text" value={String(selectedNode.data.characterId || '')} onChange={e => handleChange('characterId', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-pink-500" placeholder="ej: elena" />
+            </div>
+            {selectedNode.data.action !== 'hide' && (
+              <>
+                <div>
+                  <label className="block text-xs text-slate-400 font-medium mb-1">Posición</label>
+                  <select value={String(selectedNode.data.position || 'center')} onChange={e => handleChange('position', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-pink-500">
+                    <option value="left">Izquierda</option>
+                    <option value="center">Centro</option>
+                    <option value="right">Derecha</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-400 font-medium mb-1">Expresión</label>
+                  <input type="text" value={String(selectedNode.data.expression || '')} onChange={e => handleChange('expression', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-pink-500" placeholder="ej: happy" />
+                </div>
+              </>
+            )}
+          </div>
+        );
+      case 'audio':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Acción</label>
+              <select value={String(selectedNode.data.action || 'playBGM')} onChange={e => handleChange('action', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-cyan-500">
+                <option value="playBGM">Reproducir BGM (Loop)</option>
+                <option value="playSFX">Reproducir Efecto (SFX)</option>
+                <option value="stopBGM">Detener BGM</option>
+              </select>
+            </div>
+            {selectedNode.data.action !== 'stopBGM' && (
+              <div>
+                <label className="block text-xs text-slate-400 font-medium mb-1">Archivo de Audio</label>
+                <input type="text" value={String(selectedNode.data.fileUrl || '')} onChange={e => handleChange('fileUrl', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-cyan-500" placeholder="ej: misterio.mp3" />
+              </div>
+            )}
+          </div>
+        );
+      case 'condition':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Expresión Lógica</label>
+              <input type="text" value={String(selectedNode.data.expression || '')} onChange={e => handleChange('expression', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-purple-500" placeholder="ej: score.get('puntos') > 5" />
+            </div>
+          </div>
+        );
+      case 'inventory':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Acción</label>
+              <select value={String(selectedNode.data.action || 'add')} onChange={e => handleChange('action', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-orange-500">
+                <option value="add">Añadir (ADD)</option>
+                <option value="remove">Remover (REMOVE)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Item ID</label>
+              <input type="text" value={String(selectedNode.data.itemId || '')} onChange={e => handleChange('itemId', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-orange-500" placeholder="ej: llave_lab" />
+            </div>
+          </div>
+        );
+      case 'minigame':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Minijuego ID</label>
+              <input type="text" value={String(selectedNode.data.minigameId || '')} onChange={e => handleChange('minigameId', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-yellow-500" placeholder="ej: quiz_lab" />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Dificultad</label>
+              <select value={String(selectedNode.data.difficulty || 'normal')} onChange={e => handleChange('difficulty', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-yellow-500">
+                <option value="easy">Fácil</option>
+                <option value="normal">Normal</option>
+                <option value="hard">Difícil</option>
+              </select>
+            </div>
+          </div>
+        );
+      case 'decision':
+        return (
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 font-medium mb-1">Opciones (separadas por comas)</label>
+              <textarea 
+                value={Array.isArray(selectedNode.data.options) ? selectedNode.data.options.join(', ') : ''} 
+                onChange={e => handleChange('options', e.target.value.split(',').map(o => o.trim()).filter(o => o))}
+                rows={3}
+                className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none focus:border-emerald-500"
+                placeholder="Opción 1, Opción 2..."
+              />
+            </div>
+          </div>
+        );
       default:
         return <div className="text-sm text-slate-400">Editor no disponible para este nodo.</div>;
     }

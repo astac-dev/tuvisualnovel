@@ -19,13 +19,13 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ code, onChange, syntaxEr
   useEffect(() => {
     if (monaco) {
       // Registrar un lenguaje personalizado
-      monaco.languages.register({ id: 'novelcraft-dsl' });
+      monaco.languages.register({ id: 'tuvisualnovel-dsl' });
 
       // Configurar tokens para colorear la sintaxis
-      monaco.languages.setMonarchTokensProvider('novelcraft-dsl', {
+      monaco.languages.setMonarchTokensProvider('tuvisualnovel-dsl', {
         tokenizer: {
           root: [
-            [/(label|scene|showSprite|hideSprite|say|choice|score|inventory|playMinigame)/, "keyword"],
+            [/(label|scene|showSprite|hideSprite|say|choice|score|inventory|playMinigame|end)/, "keyword"],
             [/".*?"/, "string"],
             [/'.*?'/, "string"],
             [/\/\/.*$/, "comment"],
@@ -36,7 +36,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ code, onChange, syntaxEr
       });
 
       // Configurar tema personalizado basado en vs-dark
-      monaco.editor.defineTheme('novelcraft-theme', {
+      monaco.editor.defineTheme('tuvisualnovel-theme', {
         base: 'vs-dark',
         inherit: true,
         rules: [
@@ -55,7 +55,7 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ code, onChange, syntaxEr
   return (
     <div className="flex-1 flex flex-col h-full relative">
       <div className="absolute top-0 w-full h-8 bg-[#2d2d2d] flex items-center justify-between px-4 text-xs text-slate-400 z-10 border-b border-slate-700/50">
-        <span>story.nvl (NovelCraft DSL)</span>
+        <span>story.nvl (TuVisualNovel DSL)</span>
         {syntaxError ? (
           <span className="text-red-400 font-medium">⚠️ Error de Sintaxis</span>
         ) : (
@@ -72,8 +72,8 @@ export const CodeEditor: React.FC<CodeEditorProps> = ({ code, onChange, syntaxEr
       <div className="pt-8 h-full">
         <MonacoEditor
           height="100%"
-          language="novelcraft-dsl"
-          theme="novelcraft-theme"
+          language="tuvisualnovel-dsl"
+          theme="tuvisualnovel-theme"
           value={code}
           onChange={(value) => onChange(value || '')}
           options={{

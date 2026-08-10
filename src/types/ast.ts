@@ -1,39 +1,53 @@
 export type ASTNode = 
-  | LabelNode 
+  | JumpNode 
   | SceneNode 
-  | ShowSpriteNode 
+  | SpriteNode 
   | SayNode 
   | ScoreNode 
   | InventoryNode 
-  | ChoiceNode;
+  | ChoiceNode
+  | AudioNode
+  | ConditionNode
+  | MinigameNode;
 
-export interface LabelNode {
-  type: 'label';
-  id: string; // e.g. "inicio"
+export interface JumpNode {
+  type: 'jump';
+  action: 'label' | 'goto';
+  target: string;
 }
 
 export interface SceneNode {
   type: 'scene';
   backgroundUrl: string;
-  transition?: string; // e.g. "dissolve"
+  transition?: 'instant' | 'dissolve' | 'fade';
 }
 
-export interface ShowSpriteNode {
-  type: 'showSprite';
+export interface SpriteNode {
+  type: 'sprite';
+  action: 'show' | 'hide';
   characterId: string;
-  position: 'left' | 'center' | 'right' | { x: number, y: number };
-  scale: number;
+  position?: 'left' | 'center' | 'right' | { x: number, y: number };
+  expression?: string;
+  scale?: number;
+}
+
+export interface AudioNode {
+  type: 'audio';
+  action: 'playBGM' | 'stopBGM' | 'playSFX';
+  fileUrl: string;
+  volume?: number;
 }
 
 export interface SayNode {
   type: 'say';
   speaker: string;
   text: string;
+  isEnding?: boolean;
 }
 
 export interface ScoreNode {
   type: 'score';
-  action: 'add' | 'set' | 'subtract';
+  action: 'add' | 'set' | 'subtract' | 'sub';
   key: string;
   value: number;
 }
@@ -44,9 +58,25 @@ export interface InventoryNode {
   itemId: string;
 }
 
+export interface ChoiceOption {
+  target: string;
+  condition?: string;
+}
+
 export interface ChoiceNode {
   type: 'choice';
-  options: Record<string, string>; // { "Text to show": "target_label" }
+  options: Record<string, string | ChoiceOption>;
+}
+
+export interface ConditionNode {
+  type: 'condition';
+  expression: string;
+}
+
+export interface MinigameNode {
+  type: 'minigame';
+  minigameId: string;
+  difficulty: string;
 }
 
 export interface NovelAST {

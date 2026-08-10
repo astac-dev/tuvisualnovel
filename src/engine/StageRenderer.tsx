@@ -11,13 +11,15 @@ interface StageRendererProps {
   }[];
   width?: number;
   height?: number;
+  activeSpeaker?: string | null;
 }
 
 export const StageRenderer: React.FC<StageRendererProps> = ({ 
   backgroundUrl, 
   sprites = [], 
   width = 1280, 
-  height = 720 
+  height = 720,
+  activeSpeaker
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [app, setApp] = useState<Application | null>(null);
@@ -126,13 +128,20 @@ export const StageRenderer: React.FC<StageRendererProps> = ({
         char.y = height; // Bottom aligned
         char.scale.set(spriteData.scale || 1);
         
+        // 50% brightness if there is an active speaker and it's not this character
+        if (activeSpeaker && activeSpeaker.toLowerCase() !== spriteData.id.toLowerCase() && activeSpeaker.toLowerCase() !== 'narrador') {
+           char.tint = 0x808080;
+        } else {
+           char.tint = 0xFFFFFF;
+        }
+
         charLayer.addChild(char);
       } catch (e) {
         console.error("Failed to load sprite:", spriteData.url);
       }
     });
 
-  }, [app, sprites, width, height]);
+  }, [app, sprites, width, height, activeSpeaker]);
 
   return (
     <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-black">

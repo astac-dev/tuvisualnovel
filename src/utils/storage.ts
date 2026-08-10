@@ -6,7 +6,7 @@ export interface AutoSaveData {
 }
 
 export class StorageManager {
-  private dbName = 'NovelCraftDB';
+  private dbName = 'TuVisualNovelDB';
   private storeName = 'projects';
   private db: IDBDatabase | null = null;
 

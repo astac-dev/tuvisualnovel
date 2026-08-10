@@ -4,7 +4,7 @@ import { NovelAST, ASTNode } from '../types/ast';
  * Genera código JS a partir del AST interno.
  */
 export const generateCodeFromAST = (ast: NovelAST): string => {
-  let code = '// NovelCraft DSL Code\n';
+  let code = '// TuVisualNovel DSL Code\n';
   
   for (const node of ast.nodes) {
     switch (node.type) {

@@ -105,7 +105,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     };
 
     try {
-      localStorage.setItem(`novelcraft_save_${slotId}`, JSON.stringify(slotData));
+      localStorage.setItem(`tuvisualnovel_save_${slotId}`, JSON.stringify(slotData));
     } catch (e) {
       console.error("Error guardando partida en disco:", e);
     }
@@ -113,7 +113,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   loadFromSlot: (slotId) => {
     try {
-      const dataStr = localStorage.getItem(`novelcraft_save_${slotId}`);
+      const dataStr = localStorage.getItem(`tuvisualnovel_save_${slotId}`);
       if (!dataStr) return false;
 
       const slotData: SaveSlot = JSON.parse(dataStr);
@@ -130,6 +130,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   clearTempSlot: () => {
-    localStorage.removeItem('novelcraft_save_temp');
+    localStorage.removeItem('tuvisualnovel_save_temp');
   }
 }));

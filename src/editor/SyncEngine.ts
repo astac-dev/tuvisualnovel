@@ -4,7 +4,7 @@ import { syncCodeToGraph, syncGraphToCode } from '../engine/astParser';
 
 export const useSyncEngine = () => {
   const { nodes, edges, setNodes, setEdges } = useEditorStore();
-  const [code, setCode] = useState<string>('// NovelCraft DSL Code\n');
+  const [code, setCode] = useState<string>('// TuVisualNovel DSL Code\n');
   const [syntaxError, setSyntaxError] = useState<string | null>(null);
   
   // Ref para prevenir loops de sincronización

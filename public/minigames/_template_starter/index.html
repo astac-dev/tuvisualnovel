@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Primer Minijuego</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    .game-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+    .btn-win { background-color: #28a745; }
+    .btn-lose { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <div class="game-box">
+    <h1>¡Hola Mundo!</h1>
+    <p>Este es tu minijuego base. Aquí va tu HTML y CSS.</p>
+    
+    <div>
+      <button class="btn-win" onclick="terminarJuego(true)">Simular Victoria</button>
+      <button class="btn-lose" onclick="terminarJuego(false)">Simular Derrota</button>
+    </div>
+  </div>
+
+  <!-- Importante: Este script conecta tu juego con TuVisualNovel -->
+  <script src="../../minigames_sdk/bridge.js"></script>
+  
+  <!-- Tu código lógico -->
+  <script src="game.js"></script>
+</body>
+</html>
