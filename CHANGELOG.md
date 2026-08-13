@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.1] - 2026-08-13
+### Added
+- Configuración de GitHub Actions (`deploy.yml`) para el despliegue automático en GitHub Pages sin afectar el entorno offline.
+
 ## [0.1.0] - 2026-08-09
 ### Added
 - Scaffolding inicial con Vite, React y TypeScript.
