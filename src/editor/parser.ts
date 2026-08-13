@@ -23,7 +23,7 @@ export const parseCodeToAST = (code: string): NovelAST => {
             switch (funcName) {
               case 'label':
                 if (args[0] && args[0].type === 'Literal') {
-                  ast.nodes.push({ type: 'label', id: args[0].value });
+                  ast.nodes.push({ type: 'jump', action: 'label', target: String(args[0].value) });
                 }
                 break;
               

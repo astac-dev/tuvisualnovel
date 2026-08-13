@@ -8,8 +8,12 @@ export const generateCodeFromAST = (ast: NovelAST): string => {
   
   for (const node of ast.nodes) {
     switch (node.type) {
-      case 'label':
-        code += `label("${node.id}");\n`;
+      case 'jump':
+        if (node.action === 'label') {
+          code += `label("${node.target}");\n`;
+        } else if (node.action === 'goto') {
+          code += `goto("${node.target}");\n`;
+        }
         break;
         
       case 'scene':
@@ -26,9 +30,24 @@ export const generateCodeFromAST = (ast: NovelAST): string => {
         code += `say("${node.speaker}", "${safeText}");\n`;
         break;
         
-      case 'showSprite':
-        const pos = typeof node.position === 'string' ? `"${node.position}"` : `{ x: ${node.position.x}, y: ${node.position.y} }`;
-        code += `showSprite("${node.characterId}", { position: ${pos}, scale: ${node.scale} });\n`;
+      case 'sprite':
+        if (node.action === 'show') {
+          let options = [];
+          if (node.position) {
+             const pos = typeof node.position === 'string' ? `"${node.position}"` : `{ x: ${node.position.x}, y: ${node.position.y} }`;
+             options.push(`position: ${pos}`);
+          }
+          if (node.scale) {
+             options.push(`scale: ${node.scale}`);
+          }
+          if (options.length > 0) {
+             code += `showSprite("${node.characterId}", { ${options.join(', ')} });\n`;
+          } else {
+             code += `showSprite("${node.characterId}");\n`;
+          }
+        } else {
+          code += `hideSprite("${node.characterId}");\n`;
+        }
         break;
         
       case 'score':
