@@ -309,7 +309,7 @@ export const exportProjectToWebBundle = async (
 
   // Inject default minigame to prevent offline empty iframe crash
   try {
-    const minigameHtml = await fetch('/minigames/quiz_lab/index.html').then(res => res.text());
+    const minigameHtml = await fetch(`${import.meta.env.BASE_URL}minigames/quiz_lab/index.html`).then(res => res.text());
     zip.file('minigames/quiz_lab/index.html', minigameHtml);
   } catch (e) {
     console.warn("No se pudo empaquetar quiz_lab automáticamente. Se requerirá inserción manual.", e);

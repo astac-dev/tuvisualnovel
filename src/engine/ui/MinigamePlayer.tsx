@@ -56,7 +56,7 @@ export const MinigamePlayer: React.FC<MinigamePlayerProps> = ({
         <div className="flex-1 bg-black relative">
           <iframe 
             ref={iframeRef}
-            src={`/minigames/${minigameId}/index.html`}
+            src={`${import.meta.env.BASE_URL}minigames/${minigameId}/index.html`}
             className="w-full h-full border-none"
             sandbox="allow-scripts allow-same-origin"
             onLoad={handleIframeLoad}

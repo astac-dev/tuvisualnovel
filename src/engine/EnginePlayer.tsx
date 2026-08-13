@@ -18,7 +18,7 @@ export const EnginePlayer: React.FC<EnginePlayerProps> = ({ onClose }) => {
   
   const [currentNodeId, setCurrentNodeId] = useState<string | null>(null);
   const [showInventory, setShowInventory] = useState(false);
-  const [currentBg, setCurrentBg] = useState<string>("/assets/bg_laboratorio.jpg");
+  const [currentBg, setCurrentBg] = useState<string>(`${import.meta.env.BASE_URL}assets/bg_laboratorio.jpg`);
   const [activeSprites, setActiveSprites] = useState<any[]>([]);
   const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
 
@@ -77,7 +77,7 @@ export const EnginePlayer: React.FC<EnginePlayerProps> = ({ onClose }) => {
          setActiveSprites(prev => {
             const exists = prev.find(s => s.id === charId);
             // Defaulting sprite URL generation for demo purposes
-            const url = `/assets/${charId}.png`; 
+            const url = `${import.meta.env.BASE_URL}assets/${charId}.png`; 
             if (exists) {
                return prev.map(s => s.id === charId ? { ...s, url, position: currentNode.data.position || 'center' } : s);
             }
