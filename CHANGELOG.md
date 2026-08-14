@@ -2,6 +2,8 @@
 
 ## [0.1.1] - 2026-08-13
 ### Added
+- Herramienta de Eliminación de Fondos para *sprites* de personajes, implementada con `@imgly/background-removal` (procesamiento local por IA) y un fallback mediante Chroma/Canvas. Accesible mediante clic derecho sobre sprites importados.
+- Script automatizado de post-instalación para transferir estáticos WebAssembly / ONNX del paquete `imgly` y posibilitar ejecución *Client-Side* en GitHub Pages.
 - Configuración de GitHub Actions (`deploy.yml`) para el despliegue automático en GitHub Pages sin afectar el entorno offline.
 ### Fixed
 - Resolución de errores de tipado de TypeScript en los nodos AST dentro de `parser.ts` y `generator.ts`.

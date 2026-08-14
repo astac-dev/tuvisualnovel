@@ -21,6 +21,7 @@ import {
   MessageSquare, Settings, Save, Map, Package, Gamepad2, GraduationCap, Image as ImageIcon, Users, Trash2, Upload,
   FastForward, UserCircle, Music, GitBranch
 } from 'lucide-react';
+import { BackgroundRemoverModal } from './components/BackgroundRemoverModal';
 
 export const EditorLayout: React.FC = () => {
   const { viewMode, setViewMode } = useEditorStore();
@@ -32,6 +33,7 @@ export const EditorLayout: React.FC = () => {
   const [showGDD, setShowGDD] = useState(false);
   const [isPlaytesting, setIsPlaytesting] = useState(false);
   const [playError, setPlayError] = useState<string | null>(null);
+  const [editingSpriteUrl, setEditingSpriteUrl] = useState<string | null>(null);
 
   const handlePlay = () => {
     const { diagnostics, nodes } = useEditorStore.getState();
@@ -187,6 +189,13 @@ export const EditorLayout: React.FC = () => {
       {/* Modals & Overlays */}
       {showGDD && <GDDChecklist onClose={() => setShowGDD(false)} />}
       
+      {editingSpriteUrl !== null && (
+        <BackgroundRemoverModal 
+          initialImageUrl={editingSpriteUrl} 
+          onClose={() => setEditingSpriteUrl(null)} 
+        />
+      )}
+      
       {/* Play Error Toast */}
       {playError && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-red-900/95 border-2 border-red-500 text-white px-6 py-4 rounded-xl shadow-[0_0_30px_rgba(239,68,68,0.4)] z-50 flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
@@ -313,7 +322,15 @@ export const EditorLayout: React.FC = () => {
                 <div className="flex flex-col gap-2 mt-2">
                   {sprites.length === 0 && <span className="text-xs text-slate-500 text-center">Sin personajes</span>}
                   {sprites.map((url, i) => (
-                    <div key={i} className="flex items-center justify-between bg-slate-800 p-2 rounded border border-slate-700 group">
+                    <div 
+                      key={i} 
+                      className="flex items-center justify-between bg-slate-800 p-2 rounded border border-slate-700 group cursor-pointer"
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setEditingSpriteUrl(url);
+                      }}
+                      title="Click derecho para remover fondo"
+                    >
                       <div className="flex items-center gap-2 overflow-hidden">
                         <img src={url} className="w-8 h-8 object-cover rounded bg-slate-900" alt="sprite" />
                         <span className="text-xs text-slate-300 truncate" title={url}>{url.split('/').pop()}</span>

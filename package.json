@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "copy-assets": "npx shx mkdir -p public/imgly-assets && npx shx cp -r node_modules/@imgly/background-removal-data/dist/* public/imgly-assets/",
+    "postinstall": "npm run copy-assets"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "@monaco-editor/react": "^4.7.0",
     "@xyflow/react": "^12.11.2",
     "acorn": "^8.18.0",
@@ -34,6 +37,7 @@
     "autoprefixer": "^10.5.4",
     "oxlint": "^1.75.0",
     "postcss": "^8.5.26",
+    "shx": "^0.4.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.2.0"
